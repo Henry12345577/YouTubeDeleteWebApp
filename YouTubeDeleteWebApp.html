@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeleteTube - Server Peak</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
+        }
+        header {
+            background: #333;
+            color: white;
+            padding: 1em 0;
+            text-align: center;
+        }
+        main {
+            padding: 2em;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 1.5em;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input, button, textarea, select {
+            width: 100%;
+            margin: 0.5em 0;
+            padding: 0.5em;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            background: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>DeleteTube - Server Peak</h1>
+    </header>
+    <main>
+        <div class="container">
+            <h2>Account Creation</h2>
+            <form id="registerForm">
+                <input type="text" id="username" placeholder="Username" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <button type="submit">Register</button>
+            </form>
+
+            <h2>Upload Video</h2>
+            <form id="uploadForm">
+                <input type="text" id="videoTitle" placeholder="Video Title" required>
+                <textarea id="videoDescription" placeholder="Video Description" required></textarea>
+                <input type="file" id="videoFile" accept="video/*" required>
+                <button type="submit">Upload Video</button>
+            </form>
+
+            <h2>Manage Videos</h2>
+            <form id="manageForm">
+                <select id="videoActions">
+                    <option value="removeOwn">Remove My Video</option>
+                    <option value="removeOthers">Remove Other User’s Video</option>
+                </select>
+                <input type="text" id="videoId" placeholder="Enter Video ID" required>
+                <button type="submit">Perform Action</button>
+            </form>
+
+            <div id="output"></div>
+        </div>
+    </main>
+
+    <script>
+        const server = "Server Peak"; // Fake server logic
+
+        // Mock database
+        let users = [];
+        let videos = [];
+
+        // Register Form
+        document.getElementById("registerForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            if (users.find(user => user.username === username)) {
+                alert("Username already exists!");
+            } else {
+                users.push({ username, password });
+                alert("Account created successfully!");
+            }
+        });
+
+        // Upload Video Form
+        document.getElementById("uploadForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const title = document.getElementById("videoTitle").value;
+            const description = document.getElementById("videoDescription").value;
+            const file = document.getElementById("videoFile").files[0];
+
+            if (!file) {
+                alert("Please select a video file!");
+                return;
+            }
+
+            const videoId = `vid_${Date.now()}`;
+            videos.push({ videoId, title, description, file });
+            alert(`Video uploaded successfully with ID: ${videoId}`);
+        });
+
+        // Manage Videos Form
+        document.getElementById("manageForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const action = document.getElementById("videoActions").value;
+            const videoId = document.getElementById("videoId").value;
+
+            const videoIndex = videos.findIndex(video => video.videoId === videoId);
+            if (videoIndex === -1) {
+                alert("Video not found!");
+                return;
+            }
+
+            if (action === "removeOwn") {
+                videos.splice(videoIndex, 1);
+                alert("Your video has been removed successfully!");
+            } else if (action === "removeOthers") {
+                alert(`Video with ID ${videoId} flagged for removal by ${server}`);
+            }
+        });
+    </script>
+</body>
+</html>
